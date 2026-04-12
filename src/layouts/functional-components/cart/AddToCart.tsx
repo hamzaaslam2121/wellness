@@ -9,7 +9,7 @@ interface SubmitButtonProps {
   stylesClass: string;
   handle: string | null;
   pending: boolean;
-  onClick: (e: React.FormEvent) => void;
+  onClick: () => void;
 }
 
 function SubmitButton({
@@ -52,6 +52,7 @@ function SubmitButton({
 
   return (
     <button
+      type="button"
       onClick={onClick}
       aria-label="Add to cart"
       aria-disabled={pending ? "true" : "false"}
@@ -84,7 +85,9 @@ export function AddToCart({
 }: AddToCartProps) {
   const [message, setMessage] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-  const [selectedVariantId, setSelectedVariantId] = useState<string | undefined>(defaultVariantId);
+  const [selectedVariantId, setSelectedVariantId] = useState<
+    string | undefined
+  >(defaultVariantId);
   const lastUrl = useRef(window.location.href);
 
   // Function to update selectedVariantId based on URL
@@ -156,8 +159,8 @@ export function AddToCart({
     };
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.ChangeEvent<HTMLFormElement>) => {
+    e?.preventDefault();
     if (!selectedVariantId) return;
 
     setPending(true);
@@ -172,7 +175,7 @@ export function AddToCart({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
       <SubmitButton
         availableForSale={availableForSale}
         selectedVariantId={selectedVariantId}
@@ -184,6 +187,6 @@ export function AddToCart({
       <p aria-live="polite" className="sr-only" role="status">
         {message}
       </p>
-    </form>
+    </>
   );
 }

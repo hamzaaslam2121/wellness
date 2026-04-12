@@ -1,9 +1,10 @@
 import { glob } from "astro/loaders";
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
 import { aboutCollection } from "./types/pages/aboutCollection";
 import { contactCollection } from "./types/pages/contactCollection";
 import { ctaSectionCollection } from "./types/sections/ctaSectionCollection";
 import { paymentCollection } from "./types/sections/paymentCollection";
+import { z } from "astro/zod";
 
 // Pages collection schema
 const pagesCollection = defineCollection({

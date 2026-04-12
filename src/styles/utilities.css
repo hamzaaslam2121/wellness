@@ -1,18 +1,18 @@
 .bg-gradient {
-  @apply bg-gradient-to-r from-[#F4F4F4] to-[#F4F4F43D] dark:from-darkmode-light dark:to-darkmode-body;
+  @apply bg-linear-to-r from-[#F4F4F4] to-[#F4F4F43D] dark:from-darkmode-light dark:to-darkmode-body;
 }
 
 .rounded-sm {
-  @apply rounded-[4px];
+  @apply rounded-sm;
 }
 .rounded {
-  @apply rounded-[6px];
+  @apply rounded-md;
 }
 .rounded-lg {
-  @apply rounded-[12px];
+  @apply rounded-xl;
 }
 .rounded-xl {
-  @apply rounded-[16px];
+  @apply rounded-2xl;
 }
 
 .shadow {
@@ -47,4 +47,3 @@
 @utility form-label {
   @apply mb-4 block font-secondary text-xl font-normal text-text-dark dark:text-darkmode-light;
 }
-

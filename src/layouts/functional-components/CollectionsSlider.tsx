@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   HiOutlineArrowNarrowLeft,
   HiOutlineArrowNarrowRight,
@@ -11,20 +11,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SkeletonCategory from "./loadings/skeleton/SkeletonCategory";
 
 const CollectionsSlider = ({ collections }: { collections: any }) => {
-  const [_, setInit] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [collectionsData, setCollectionsData] = useState([]);
-  const [loadingCollectionsData, setLoadingCollectionsData] = useState(true);
+  const [prevEl, setPrevEl] = useState<HTMLDivElement | null>(null);
+  const [nextEl, setNextEl] = useState<HTMLDivElement | null>(null);
+  const collectionsData = collections ?? [];
 
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
-
-  useEffect(() => {
-    setCollectionsData(collections);
-    setLoadingCollectionsData(false);
-  }, [collections]);
-
-  if (loadingCollectionsData) {
+  if (!collectionsData.length) {
     return <SkeletonCategory />;
   }
 
@@ -36,7 +28,6 @@ const CollectionsSlider = ({ collections }: { collections: any }) => {
     >
       <Swiper
         modules={[Pagination, Navigation]}
-        // navigation={true}
         slidesPerView={2}
         spaceBetween={10}
         breakpoints={{
@@ -54,14 +45,12 @@ const CollectionsSlider = ({ collections }: { collections: any }) => {
           },
         }}
         navigation={{
-          prevEl: prevRef.current,
-          nextEl: nextRef.current,
+          prevEl,
+          nextEl,
         }}
-        //trigger a re-render by updating the state on swiper initialization
-        onInit={() => setInit(true)}
       >
         {collectionsData?.map((item: any) => {
-          const { title, handle, image, } = item;
+          const { title, handle, image } = item;
           return (
             <SwiperSlide key={handle}>
               <div className="text-center relative">
@@ -91,19 +80,20 @@ const CollectionsSlider = ({ collections }: { collections: any }) => {
         })}
 
         <div
-          className={`hidden md:block w-full absolute top-[33%] z-10 px-4 text-text-dark ${isHovered
-            ? "opacity-100 transition-opacity duration-300 ease-in-out"
-            : "opacity-0 transition-opacity duration-300 ease-in-out"
-            }`}
+          className={`hidden md:block w-full absolute top-[33%] z-10 px-4 text-text-dark ${
+            isHovered
+              ? "opacity-100 transition-opacity duration-300 ease-in-out"
+              : "opacity-0 transition-opacity duration-300 ease-in-out"
+          }`}
         >
           <div
-            ref={prevRef}
+            ref={setPrevEl}
             className="p-2 lg:p-3 rounded-md bg-body cursor-pointer shadow-sm absolute left-4"
           >
             <HiOutlineArrowNarrowLeft size={24} />
           </div>
           <div
-            ref={nextRef}
+            ref={setNextEl}
             className="p-2 lg:p-3 rounded-md bg-body cursor-pointer shadow-sm absolute right-4"
           >
             <HiOutlineArrowNarrowRight size={24} />

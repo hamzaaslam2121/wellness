@@ -67,7 +67,14 @@ const domain = import.meta.env.PUBLIC_SHOPIFY_STORE_DOMAIN
   ? ensureStartsWith(import.meta.env.PUBLIC_SHOPIFY_STORE_DOMAIN, "https://")
   : "";
 const endpoint = `${domain}${SHOPIFY_GRAPHQL_API_ENDPOINT}`;
-const key = import.meta.env.PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN!;
+
+// Support new Private Access Token (Headless Sales Channel) with backward compatibility
+// Priority: PRIVATE_ACCESS_TOKEN > STOREFRONT_ACCESS_TOKEN (legacy)
+const privateAccessToken = import.meta.env
+  .PUBLIC_SHOPIFY_STOREFRONT_PRIVATE_ACCESS_TOKEN;
+const legacyAccessToken = import.meta.env
+  .PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+const key = privateAccessToken || legacyAccessToken || "";
 
 type ExtractVariables<T> = T extends { variables: object }
   ? T["variables"]
@@ -85,19 +92,28 @@ export async function shopifyFetch<T>({
   variables?: ExtractVariables<T>;
 }): Promise<{ status: number; body: T } | never> {
   try {
-    // console.log("Headers being sent:", {
-    //   "Content-Type": "application/json",
-    //   "X-Shopify-Storefront-Access-Token": key,
-    //   ...headers,
-    // });
+    // Determine which header to use based on token type
+    // Private Access Token (new): Shopify-Storefront-Private-Token
+    // Public/Legacy Token: X-Shopify-Storefront-Access-Token
+    const requestHeaders: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+
+    if (privateAccessToken) {
+      requestHeaders["Shopify-Storefront-Private-Token"] = key;
+    } else {
+      requestHeaders["X-Shopify-Storefront-Access-Token"] = key;
+    }
+
+    // Merge additional headers
+    if (headers) {
+      const additionalHeaders = headers as Record<string, string>;
+      Object.assign(requestHeaders, additionalHeaders);
+    }
 
     const result = await fetch(endpoint, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Shopify-Storefront-Access-Token": key,
-        ...headers,
-      },
+      headers: requestHeaders,
       body: JSON.stringify({
         ...(query && { query }),
         ...(variables && { variables }),

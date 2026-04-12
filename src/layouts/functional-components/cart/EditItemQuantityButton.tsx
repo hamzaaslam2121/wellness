@@ -13,7 +13,7 @@ const EditItemQuantityButton: React.FC<Props> = ({ item, type }) => {
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newQuantity = type === "plus" ? item.quantity + 1 : item.quantity - 1;

@@ -35,7 +35,7 @@ const DeleteItemButton: React.FC<DeleteItemButtonProps> = ({ item }) => {
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPending(true);
 

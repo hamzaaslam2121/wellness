@@ -24,7 +24,7 @@ const SignUpForm = () => {
     });
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {

@@ -38,7 +38,7 @@ const SearchBar = () => {
     updateURL("");
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const searchInput = form.search as HTMLInputElement;
